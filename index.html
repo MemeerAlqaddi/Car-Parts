@@ -14,12 +14,24 @@
     nav, footer {
       background-color: #1C1C1C;
     }
-    nav a.nav-link {
-      color: #C0C0C0;
+    nav a.nav-link,
+    .navbar-collapse .nav-link,
+    .navbar-nav .nav-link,
+    .navbar-nav .nav-link:focus,
+    .navbar-nav .nav-link:active {
+      color: #fff !important;
       font-weight: 600;
     }
-    nav a.nav-link:hover {
-      color: #fff;
+    nav a.nav-link:hover,
+    .navbar-collapse .nav-link:hover,
+    .navbar-nav .nav-link:hover {
+      color: #FFD700 !important;
+    }
+    .navbar-toggler {
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='rgba%28 255, 255, 255, 0.8 %29)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
     }
     footer {
       color: #C0C0C0;
@@ -48,6 +60,15 @@
       font-weight: 600;
       user-select: none;
     }
+    .btn-warning {
+      background-color: #ec971f;
+      border-color: #ec971f;
+      font-weight: 600;
+    }
+    .btn-warning:hover {
+      background-color: #d6851c;
+      border-color: #d6851c;
+    }
   </style>
 </head>
 <body>
@@ -56,7 +77,7 @@
   <div class="container-fluid">
     <!-- Website Name -->
     <a class="navbar-brand me-auto" href="index.html" style="margin-right: auto; color: rgba(236, 151, 31, 0.993);">Car Parts Shop</a>
-    
+
     <!-- Navigation Links -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -87,13 +108,18 @@
   <p class="lead mx-auto" style="max-width: 600px;">
       Find high-quality new and used car parts from top makes and models. 
       Browse by your vehicle details or search for the part(s) you need.
-    </p>
-    <div class="graphic-container mt-4 mb-5">
-      <img src="main.jpg" alt="Main Graphic" class="img-fluid rounded">
-    </div>
-  
-  </main>
-  
+  </p>
+  <div class="graphic-container mt-4 mb-5">
+    <img src="main.jpg" alt="Main Graphic" class="img-fluid rounded">
+  </div>
+
+  <!-- Buttons Section -->
+  <div class="mb-5">
+    <a href="new-parts.html" class="btn btn-warning btn-lg me-3">New Parts</a>
+    <a href="used-parts.html" class="btn btn-warning btn-lg">Used Parts</a>
+  </div>
+</main>
+
 <footer>
   &copy; 2025 Car Parts Shop. All rights reserved.
 </footer>
