@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Contact Us - Car Parts Shop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      background-color: #000;
+      color: #C0C0C0;
+      min-height: 100vh;
+    }
+    nav, footer {
+      background-color: #1C1C1C;
+    }
+    nav a.nav-link {
+      color: #C0C0C0;
+      font-weight: 600;
+    }
+    nav a.nav-link:hover {
+      color: #fff;
+    }
+    footer {
+      color: #C0C0C0;
+      padding: 15px 0;
+      text-align: center;
+      border-top: 1px solid #555;
+    }
+    h1 {
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+    }
+    .contact-container {
+      max-width: 600px;
+      margin: 50px auto;
+    }
+    label {
+      font-weight: 600;
+    }
+    input, textarea {
+      background-color: #1C1C1C;
+      border: 1px solid #555;
+      color: #C0C0C0;
+      border-radius: 6px;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #fff;
+    }
+    button {
+      background-color: #C0C0C0;
+      border: none;
+      color: #000;
+      font-weight: 700;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand text-white fw-bold" href="index.html">Car Parts Shop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav gap-3">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="used-parts.html">Used Parts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="new-parts.html">New Parts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="contact.html">Contact Us</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="contact-container">
+  <h1 class="text-center">Contact Us</h1>
+  <form id="contactForm" action="#" method="POST">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" id="name" placeholder="Your full name" required />
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email Address</label>
+      <input type="email" class="form-control" id="email" placeholder="you@example.com" required />
+    </div>
+    <div class="mb-3">
+      <label for="message" class="form-label">Message</label>
+      <textarea class="form-control" id="message" rows="5" placeholder="Write your message here..." required></textarea>
+    </div>
+    <div class="text-center">
+      <button type="submit">Send Message</button>
+    </div>
+  </form>
+</main>
+
+<footer>
+  &copy; 2025 Car Parts Shop. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Basic client-side form submission handler (optional)
+  document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    alert('Thank you for contacting us! We will get back to you soon.');
+    this.reset();
+  });
+</script>
+</body>
+</html>
