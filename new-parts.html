@@ -237,7 +237,7 @@
           <a class="nav-link" href="index.html">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="used-parts.html">New Parts</a>
+          <a class="nav-link active" href="used-parts.html">Used Parts</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="new-parts.html">New Parts</a>
@@ -270,9 +270,6 @@
           <option value="Toyota">Toyota</option>
           <option value="Honda">Honda</option>
           <option value="Ford">Ford</option>
-          <option value="Audi">Audi</option>
-          <option value="BMW">BMW</option>
-          <option value="Lexus">Lexus</option>
         </select>
       </div>
       <div class="col-6 col-md-2">
@@ -287,7 +284,7 @@
         </select>
       </div>
       <div class="col-6 col-md-3">
-        <input type="text" id="searchInput" class="form-control" placeholder="Search parts..." aria-label="Search parts" style="color: white;" />
+        <input type="text" id="searchInput" class="form-control" placeholder="Search parts..." aria-label="Search parts" />
       </div>
       <div class="col-12 col-md-3 d-flex justify-content-end">
         <button class="btn btn-outline-primary" id="clearFilters">Clear Filters</button>
@@ -356,9 +353,6 @@
     Toyota: ["Camry", "Corolla", "Tacoma"],
     Honda: ["Accord", "Civic", "CR-V"],
     Ford: ["F-150", "Mustang", "Explorer"],
-    BMW: ["3 Series", "4 Series", "5 Series" , "7 Series" , "M Series" , "Z Series"],
-    Audi: ["A-line", "Q-line", "S-line" , "R-line" ],
-    Lexus: ["UX", "GX", "LX" , "NX" , "RX" , "IS" , "LS" ],
   };
 
   function populateModels() {
