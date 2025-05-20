@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Used Parts - Car Parts Shop</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* === Base styles === */
+    body {
+      background-color: #000;
+      color: #C0C0C0;
+      min-height: 100vh;
+      position: relative;
+      padding-bottom: 50px;
+    }
+    nav, footer {
+      background-color: #1C1C1C;
+    }
+    nav a.nav-link {
+      color: #C0C0C0;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    nav a.nav-link:hover, nav a.nav-link.active {
+      color: #fff;
+    }
+    footer {
+      color: #C0C0C0;
+      padding: 15px 0;
+      text-align: center;
+      border-top: 1px solid #555;
+    }
+    h1, h2 {
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .filter-section select,
+    .filter-section input {
+      background-color: #222;
+      border: 1px solid #444;
+      color: #ccc;
+    }
+    .filter-section select:focus,
+    .filter-section input:focus {
+      background-color: #111;
+      color: #fff;
+      border-color: #434547;
+      outline: none;
+      box-shadow: 0 0 5px #007bff;
+    }
+    .part-card {
+      background-color: #1c1c1c;
+      border-radius: 8px;
+      padding: 1rem;
+      box-shadow: 0 0 10px #111;
+      transition: box-shadow 0.3s ease;
+      color: #c0c0c0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 180px;
+    }
+    .part-card:hover {
+      box-shadow: 0 0 15px #007bff;
+      color: #fff;
+    }
+    .btn-add-cart {
+      margin-top: auto;
+    }
+    /* === Cart badge in navbar === */
+    #cartCount {
+      background: #007bff;
+      color: white;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0 6px;
+      border-radius: 50%;
+      position: relative;
+      top: -10px;
+      left: -10px;
+      min-width: 20px;
+      text-align: center;
+      user-select: none;
+    }
+    /* === Slide-in cart panel === */
+    #cartPanel {
+      position: fixed;
+      top: 0;
+      right: -400px;
+      width: 350px;
+      max-width: 90vw;
+      height: 100vh;
+      background-color: #121212;
+      color: #c0c0c0;
+      box-shadow: -5px 0 15px rgba(0,0,0,0.7);
+      transition: right 0.3s ease;
+      z-index: 1050;
+      display: flex;
+      flex-direction: column;
+    }
+    #cartPanel.open {
+      right: 0;
+    }
+    #cartPanel header {
+      padding: 1rem;
+      border-bottom: 1px solid #333;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #cartPanel header h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+    #cartPanel header button {
+      background: transparent;
+      border: none;
+      color: #c0c0c0;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    #cartItems {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 0.5rem;
+    }
+    .cart-item-info {
+      flex-grow: 1;
+    }
+    .cart-item-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+    .cart-item-qty {
+      font-size: 0.85rem;
+      color: #999;
+    }
+    .btn-remove-cart {
+      background: transparent;
+      border: none;
+      color: #ff5555;
+      font-size: 1.25rem;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    #cartTotal {
+      padding: 1rem;
+      border-top: 1px solid #333;
+      font-weight: 700;
+      font-size: 1.1rem;
+      text-align: right;
+    }
+    #checkoutForm {
+      padding: 1rem;
+      border-top: 1px solid #333;
+    }
+    #checkoutForm label {
+      display: block;
+      margin-bottom: 0.25rem;
+      font-size: 0.85rem;
+    }
+    #checkoutForm input {
+      width: 100%;
+      padding: 0.375rem 0.5rem;
+      margin-bottom: 0.75rem;
+      border: 1px solid #444;
+      background-color: #222;
+      color: #ccc;
+      border-radius: 4px;
+    }
+    #checkoutForm button {
+      width: 100%;
+      padding: 0.5rem;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    #checkoutForm button:hover {
+      background-color: #0056b3;
+    }
+    /* Scrollbar for cart items */
+    #cartItems::-webkit-scrollbar {
+      width: 8px;
+    }
+    #cartItems::-webkit-scrollbar-track {
+      background: #121212;
+    }
+    #cartItems::-webkit-scrollbar-thumb {
+      background: #007bff;
+      border-radius: 4px;
+    }
+     #searchInput::placeholder {
+    color: white;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+  <div class="container position-relative">
+    <a class="navbar-brand text-white fw-bold" href="index.html">Car Parts Shop</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" 
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon" style="filter: invert(1);"></span>
+    </button>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav gap-3 align-items-center">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="used-parts.html">Used Parts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="new-parts.html">New Parts</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="about.html">About Us</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="contact.html">Contact Us</a>
+        </li>
+        <li class="nav-item position-relative">
+          <a id="cartToggle" class="nav-link d-flex align-items-center" role="button" aria-label="Toggle cart panel">
+            Cart <span id="cartCount" class="ms-1">0</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<main class="container mt-5 mb-5">
+  <h1 class="text-center mb-4">Shop Used Parts</h1>
+
+  <!-- Filters -->
+  <section class="filter-section mb-5">
+    <div class="row g-3">
+      <div class="col-6 col-md-2">
+        <select id="make" class="form-select" onchange="populateModels()">
+          <option value="">Select Make</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Honda">Honda</option>
+          <option value="Ford">Ford</option>
+          <option value="Audi">Audi</option>
+          <option value="BMW">BMW</option>
+          <option value="Lexus">Lexus</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-2">
+        <select id="model" class="form-select" disabled>
+          <option value="">Select Model</option>
+        </select>
+      </div>
+      <div class="col-6 col-md-2">
+        <select id="year" class="form-select">
+          <option value="">Select Year</option>
+          <!-- Years dynamically inserted by JS -->
+        </select>
+      </div>
+      <div class="col-6 col-md-3">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search parts..." aria-label="Search parts" style="color: white;" />
+      </div>
+      <div class="col-12 col-md-3 d-flex justify-content-end">
+        <button class="btn btn-outline-primary" id="clearFilters">Clear Filters</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Parts List -->
+  <section id="partsList" class="row g-3">
+    <!-- parts cards inserted here by JS -->
+  </section>
+</main>
+
+<!-- Cart Panel -->
+<aside id="cartPanel" aria-label="Shopping cart panel" aria-hidden="true">
+  <header>
+    <h2>Your Cart</h2>
+    <button id="closeCart" aria-label="Close cart panel">&times;</button>
+  </header>
+  <div id="cartItems" tabindex="0" aria-live="polite" aria-relevant="additions removals">
+    <!-- Cart items inserted here by JS -->
+  </div>
+  <div id="cartTotal">Total: $0.00</div>
+  <form id="checkoutForm" aria-label="Checkout form">
+    <label for="nameInput">Name</label>
+    <input type="text" id="nameInput" name="name" required autocomplete="name" />
+    <label for="emailInput">Email</label>
+    <input type="email" id="emailInput" name="email" required autocomplete="email" />
+    <label for="addressInput">Shipping Address</label>
+    <input type="text" id="addressInput" name="address" required autocomplete="street-address" />
+    <button type="submit">Place Order</button>
+  </form>
+</aside>
+
+<footer class="mt-auto">
+  &copy; 2025 Car Parts Shop. All rights reserved.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // === Sample parts data ===
+  const partsData = [
+    { id: 1, name: "Toyota Camry Headlight", make: "Toyota", model: "Camry", year: 2018, price: 120 },
+    { id: 2, name: "Honda Accord Brake Pads", make: "Honda", model: "Accord", year: 2017, price: 75 },
+    { id: 3, name: "Ford F-150 Tailgate", make: "Ford", model: "F-150", year: 2016, price: 230 },
+    { id: 4, name: "Toyota Corolla Bumper", make: "Toyota", model: "Corolla", year: 2019, price: 150 },
+    { id: 5, name: "Honda Civic Mirror", make: "Honda", model: "Civic", year: 2020, price: 60 },
+    { id: 6, name: "Ford Mustang Exhaust", make: "Ford", model: "Mustang", year: 2015, price: 400 },
+    { id: 7, name: "Toyota Tacoma Grill", make: "Toyota", model: "Tacoma", year: 2017, price: 110 },
+    { id: 8, name: "Honda CR-V Headlight", make: "Honda", model: "CR-V", year: 2018, price: 130 },
+    { id: 9, name: "Ford Explorer Door Handle", make: "Ford", model: "Explorer", year: 2019, price: 85 },
+  ];
+
+  // === Populate years dropdown dynamically ===
+  const yearSelect = document.getElementById("year");
+  const currentYear = new Date().getFullYear();
+  for (let y = currentYear; y >= 1990; y--) {
+    const opt = document.createElement("option");
+    opt.value = y;
+    opt.textContent = y;
+    yearSelect.appendChild(opt);
+  }
+
+  // === Populate models dropdown based on make ===
+  const modelsByMake = {
+    Toyota: ["Camry", "Corolla", "Tacoma"],
+    Honda: ["Accord", "Civic", "CR-V"],
+    Ford: ["F-150", "Mustang", "Explorer"],
+    BMW: ["3 Series", "4 Series", "5 Series" , "7 Series" , "M Series" , "Z Series"],
+    Audi: ["A-line", "Q-line", "S-line" , "R-line" ],
+    Lexus: ["UX", "GX", "LX" , "NX" , "RX" , "IS" , "LS" ],
+  };
+
+  function populateModels() {
+    const make = document.getElementById("make").value;
+    const modelSelect = document.getElementById("model");
+    modelSelect.innerHTML = '<option value="">Select Model</option>';
+    if (make && modelsByMake[make]) {
+      modelsByMake[make].forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = m;
+        opt.textContent = m;
+        modelSelect.appendChild(opt);
+      });
+      modelSelect.disabled = false;
+    } else {
+      modelSelect.disabled = true;
+    }
+    filterAndRenderParts();
+  }
+
+  // === Filter parts and render ===
+  const makeSelect = document.getElementById("make");
+  const modelSelect = document.getElementById("model");
+  const searchInput = document.getElementById("searchInput");
+  const clearFiltersBtn = document.getElementById("clearFilters");
+  const partsListEl = document.getElementById("partsList");
+
+  makeSelect.addEventListener("change", () => {
+    populateModels();
+  });
+  modelSelect.addEventListener("change", filterAndRenderParts);
+  yearSelect.addEventListener("change", filterAndRenderParts);
+  searchInput.addEventListener("input", filterAndRenderParts);
+  clearFiltersBtn.addEventListener("click", () => {
+    makeSelect.value = "";
+    modelSelect.innerHTML = '<option value="">Select Model</option>';
+    modelSelect.disabled = true;
+    yearSelect.value = "";
+    searchInput.value = "";
+    filterAndRenderParts();
+  });
+
+  function filterAndRenderParts() {
+    const make = makeSelect.value;
+    const model = modelSelect.value;
+    const year = yearSelect.value;
+    const search = searchInput.value.toLowerCase();
+
+    let filtered = partsData.filter(part => {
+      if (make && part.make !== make) return false;
+      if (model && part.model !== model) return false;
+      if (year && part.year.toString() !== year) return false;
+      if (search && !part.name.toLowerCase().includes(search)) return false;
+      return true;
+    });
+
+    renderParts(filtered);
+  }
+
+  function renderParts(parts) {
+    partsListEl.innerHTML = "";
+    if (parts.length === 0) {
+      partsListEl.innerHTML = `<p class="text-center text-muted">No parts found.</p>`;
+      return;
+    }
+    parts.forEach(part => {
+      const col = document.createElement("div");
+      col.className = "col-12 col-sm-6 col-md-4";
+
+      const card = document.createElement("div");
+      card.className = "part-card";
+
+      const name = document.createElement("h3");
+      name.textContent = part.name;
+      name.style.fontSize = "1.1rem";
+      name.style.fontWeight = "700";
+
+      const details = document.createElement("p");
+      details.textContent = `${part.make} ${part.model} - ${part.year}`;
+      details.style.fontSize = "0.9rem";
+      details.style.margin = "0.2rem 0 0.6rem";
+
+      const price = document.createElement("p");
+      price.textContent = `$${part.price.toFixed(2)}`;
+      price.style.fontWeight = "600";
+
+      const btn = document.createElement("button");
+      btn.className = "btn btn-primary btn-add-cart";
+      btn.textContent = "Add to Cart";
+      btn.setAttribute("aria-label", `Add ${part.name} to cart`);
+      btn.onclick = () => addToCart(part);
+
+      card.appendChild(name);
+      card.appendChild(details);
+      card.appendChild(price);
+      card.appendChild(btn);
+
+      col.appendChild(card);
+      partsListEl.appendChild(col);
+    });
+  }
+
+  // === Cart logic ===
+  let cart = [];
+
+  const cartToggle = document.getElementById("cartToggle");
+  const cartPanel = document.getElementById("cartPanel");
+  const closeCartBtn = document.getElementById("closeCart");
+  const cartItemsEl = document.getElementById("cartItems");
+  const cartCountEl = document.getElementById("cartCount");
+  const cartTotalEl = document.getElementById("cartTotal");
+  const checkoutForm = document.getElementById("checkoutForm");
+
+  cartToggle.addEventListener("click", () => {
+    toggleCartPanel();
+  });
+  closeCartBtn.addEventListener("click", () => {
+    closeCartPanel();
+  });
+
+  function toggleCartPanel() {
+    if (cartPanel.classList.contains("open")) {
+      closeCartPanel();
+    } else {
+      openCartPanel();
+    }
+  }
+  function openCartPanel() {
+    cartPanel.classList.add("open");
+    cartPanel.setAttribute("aria-hidden", "false");
+    cartPanel.focus();
+  }
+  function closeCartPanel() {
+    cartPanel.classList.remove("open");
+    cartPanel.setAttribute("aria-hidden", "true");
+  }
+
+  function addToCart(part) {
+    const found = cart.find(item => item.id === part.id);
+    if (found) {
+      found.qty++;
+    } else {
+      cart.push({ ...part, qty: 1 });
+    }
+    saveCart();
+    renderCart();
+    openCartPanel();
+  }
+
+  function removeFromCart(partId) {
+    cart = cart.filter(item => item.id !== partId);
+    saveCart();
+    renderCart();
+  }
+
+  function changeQty(partId, qty) {
+    const item = cart.find(i => i.id === partId);
+    if (item) {
+      item.qty = qty < 1 ? 1 : qty;
+      saveCart();
+      renderCart();
+    }
+  }
+
+  function saveCart() {
+    localStorage.setItem("usedPartsCart", JSON.stringify(cart));
+  }
+  function loadCart() {
+    const saved = localStorage.getItem("usedPartsCart");
+    if (saved) {
+      cart = JSON.parse(saved);
+    }
+  }
+
+  function renderCart() {
+    cartCountEl.textContent = cart.reduce((acc, item) => acc + item.qty, 0);
+    cartItemsEl.innerHTML = "";
+
+    if (cart.length === 0) {
+      cartItemsEl.innerHTML = `<p class="text-center text-muted">Your cart is empty.</p>`;
+      cartTotalEl.textContent = "Total: $0.00";
+      return;
+    }
+
+    let total = 0;
+    cart.forEach(item => {
+      total += item.price * item.qty;
+
+      const div = document.createElement("div");
+      div.className = "cart-item d-flex justify-content-between align-items-center";
+
+      const name = document.createElement("div");
+      name.textContent = item.name;
+
+      const qtyInput = document.createElement("input");
+      qtyInput.type = "number";
+      qtyInput.min = "1";
+      qtyInput.value = item.qty;
+      qtyInput.setAttribute("aria-label", `Quantity for ${item.name}`);
+      qtyInput.onchange = (e) => changeQty(item.id, parseInt(e.target.value));
+
+      const price = document.createElement("div");
+      price.textContent = `$${(item.price * item.qty).toFixed(2)}`;
+
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "btn btn-link text-danger";
+      removeBtn.textContent = "Remove";
+      removeBtn.onclick = () => removeFromCart(item.id);
+
+      div.appendChild(name);
+      div.appendChild(qtyInput);
+      div.appendChild(price);
+      div.appendChild(removeBtn);
+
+      cartItemsEl.appendChild(div);
+    });
+
+    cartTotalEl.textContent = `Total: $${total.toFixed(2)}`;
+  }
+
+  // === Checkout ===
+  checkoutForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    if (cart.length === 0) {
+      alert("Your cart is empty.");
+      return;
+    }
+
+    const name = checkoutForm.name.value.trim();
+    const email = checkoutForm.email.value.trim();
+    const address = checkoutForm.address.value.trim();
+
+    if (!name || !email || !address) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    alert(`Thank you for your order, ${name}! We will ship your items to ${address}.`);
+
+    cart = [];
+    saveCart();
+    renderCart();
+    closeCartPanel();
+    checkoutForm.reset();
+  });
+
+  // === Initialization ===
+  loadCart();
+  filterAndRenderParts();
+  renderCart();
+</script>
+</body>
+</html>
